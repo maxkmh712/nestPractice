@@ -1,0 +1,32 @@
+import { CoreEntity } from "src/common/entities/core.entitiy";
+import { Userinfo } from "src/userinfo/entities/userinfo.entity";
+export declare class Content extends CoreEntity {
+    title: string;
+    description: string;
+    link: string;
+    color: string;
+    view: number;
+    like: number;
+    isPick: boolean;
+    isFreePoint: boolean;
+    isActive: boolean;
+    isPPDiscount: boolean;
+    isPromotion: boolean;
+    freePointDiscount: number;
+    interest: number;
+    isWatermark: boolean;
+    isSale: boolean;
+    ppDiscountStart: Date;
+    ppDiscountEnd: Date;
+    basicScore: number;
+    pickScore: number;
+    businessPrice: number;
+    companyPrice: number;
+    individualPrice: number;
+    personalPrice: number;
+    pixelPointDiscount: number;
+    goState: string;
+    search: string;
+    username: string;
+    userinfo: Userinfo;
+}
