@@ -8,4 +8,5 @@ export declare class Users extends CoreEntity {
     isConfirm: boolean;
     isBlocked: boolean;
     fail: number;
+    role: string;
 }

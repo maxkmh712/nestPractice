@@ -1,31 +1,30 @@
 import {
   IsBoolean,
   IsEmail,
-  IsHash,
   IsNumber,
   IsString,
-  Min,
+  MinLength,
 } from "class-validator";
 import { CoreEntity } from "src/common/entities/core.entitiy";
 import { Column, Entity } from "typeorm";
+import { Role } from "./roles.enum";
 
 @Entity()
 export class Users extends CoreEntity {
   @Column({ unique: true })
   @IsString()
-  @Min(3)
+  @MinLength(3)
   username: string;
 
   @Column()
   @IsEmail()
-  @Min(6)
   email: string;
 
   @Column()
   @IsString()
   provider: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsString()
   password: string;
 
@@ -44,4 +43,8 @@ export class Users extends CoreEntity {
   @Column({ default: 0 })
   @IsNumber()
   fail: number;
+
+  @Column({ default: Role.USER })
+  @IsString()
+  role: string;
 }

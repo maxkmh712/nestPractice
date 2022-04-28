@@ -20,6 +20,7 @@ const users_entity_1 = require("../users/entities/users.entity");
 const typeorm_2 = require("typeorm");
 const bcrypt = require("bcrypt");
 const auth_error_1 = require("./error/auth.error");
+const roles_enum_1 = require("../users/entities/roles.enum");
 let AuthService = class AuthService {
     constructor(jwtService, authError, usersRepository) {
         this.jwtService = jwtService;
@@ -54,6 +55,28 @@ let AuthService = class AuthService {
         catch (error) {
             console.log(error);
             return this.authError.errorHandler(error.message);
+        }
+    }
+    async kakaoLogin(email) {
+        try {
+            let user = await this.usersRepository.findOneBy({ email: email });
+            if (!user) {
+                user = await this.usersRepository.create({
+                    username: "test",
+                    email,
+                    provider: "kakao",
+                    password: null,
+                    role: roles_enum_1.Role.USER,
+                });
+            }
+            const payload = {
+                id: user.id,
+            };
+            return Object.assign(Object.assign({}, user), { jwt: this.jwtService.sign(payload) });
+        }
+        catch (error) {
+            console.log(error);
+            throw new common_1.BadRequestException(this.authError.errorHandler(error.message));
         }
     }
     async login(user) {

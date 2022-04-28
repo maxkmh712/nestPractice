@@ -13,7 +13,7 @@ import { UploadFile } from "./upload-file/entities/upload-file.entity";
 import { AuthModule } from "./auth/auth.module";
 import { ConfigModule } from "@nestjs/config";
 import * as Joi from "joi";
-import { APP_FILTER } from "@nestjs/core";
+import { APP_FILTER, APP_GUARD } from "@nestjs/core";
 import { BadRequestExceptionFilter } from "./common/exception/common.exception";
 import { OrderModule } from "./order/order.module";
 import { Order } from "./order/entities/order.entity";
@@ -25,6 +25,7 @@ import { Movie } from "./movie/entities/movie.entity";
 import { MovieDirectorModule } from "./movie-director/movie-director.module";
 import { MovieDirector } from "./movie-director/entities/movie-director.entity";
 import { MovieDirectorController } from "./movie-director/movie-director.controller";
+import { RolesGuard } from "./role/role.guard";
 
 @Module({
   imports: [
@@ -83,11 +84,15 @@ import { MovieDirectorController } from "./movie-director/movie-director.control
     MovieModule,
     MovieDirectorModule,
   ],
-  controllers: [MovieController, MovieDirectorController],
+  controllers: [],
   providers: [
     {
       provide: APP_FILTER,
       useClass: BadRequestExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

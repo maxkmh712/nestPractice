@@ -19,6 +19,7 @@ const swagger_1 = require("@nestjs/swagger");
 const auth_service_1 = require("./auth.service");
 const login_user_dto_1 = require("./dto/login-user.dto");
 const auth_error_1 = require("./error/auth.error");
+const kakao_guard_1 = require("./guard/kakao.guard");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -32,6 +33,10 @@ let AuthController = class AuthController {
     async googleAuth(req) { }
     async googleAuthRedirect(req) {
         return await this.authService.googleLogin(req);
+    }
+    async getToken(query, req) {
+        console.log("1");
+        return this.authService.kakaoLogin(req["guard"]);
     }
 };
 __decorate([
@@ -74,6 +79,20 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "googleAuthRedirect", null);
+__decorate([
+    (0, common_1.Get)("/login/kakao"),
+    (0, common_1.UseGuards)(kakao_guard_1.KakaoGuard),
+    (0, swagger_1.ApiOperation)({
+        summary: "카카오 토큰 확인",
+        description: "access token과 refresh token 확인",
+    }),
+    (0, swagger_1.ApiOkResponse)({ description: "access token 과 refresh 토큰 발급 완료" }),
+    __param(0, (0, common_1.Query)()),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "getToken", null);
 AuthController = __decorate([
     (0, common_1.Controller)("auth"),
     (0, swagger_1.ApiTags)("Auth API"),

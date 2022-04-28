@@ -28,12 +28,11 @@ const order_module_1 = require("./order/order.module");
 const order_entity_1 = require("./order/entities/order.entity");
 const order_state_module_1 = require("./order-state/order-state.module");
 const order_state_entity_1 = require("./order-state/entities/order-state.entity");
-const movie_controller_1 = require("./movie/movie.controller");
 const movie_module_1 = require("./movie/movie.module");
 const movie_entity_1 = require("./movie/entities/movie.entity");
 const movie_director_module_1 = require("./movie-director/movie-director.module");
 const movie_director_entity_1 = require("./movie-director/entities/movie-director.entity");
-const movie_director_controller_1 = require("./movie-director/movie-director.controller");
+const role_guard_1 = require("./role/role.guard");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -91,11 +90,15 @@ AppModule = __decorate([
             movie_module_1.MovieModule,
             movie_director_module_1.MovieDirectorModule,
         ],
-        controllers: [movie_controller_1.MovieController, movie_director_controller_1.MovieDirectorController],
+        controllers: [],
         providers: [
             {
                 provide: core_1.APP_FILTER,
                 useClass: common_exception_1.BadRequestExceptionFilter,
+            },
+            {
+                provide: core_1.APP_GUARD,
+                useClass: role_guard_1.RolesGuard,
             },
         ],
     })

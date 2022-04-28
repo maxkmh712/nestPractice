@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ForbiddenException,
+  HttpException,
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -11,6 +12,11 @@ import { Repository } from "typeorm";
 import * as bcrypt from "bcrypt";
 import { AuthError, AUTH_ERROR } from "./error/auth.error";
 import { LoginUserInput, LoginUserOutput } from "./dto/login-user.dto";
+import { PromptId } from "aws-sdk/clients/connect";
+import { KaKaoDto } from "./dto/kakao-dto";
+import axios from "axios";
+import { Role } from "src/users/entities/roles.enum";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class AuthService {
@@ -19,6 +25,7 @@ export class AuthService {
     private readonly authError: AuthError,
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
+    private readonly userServices: UsersService,
   ) {}
 
   async validateUser(username: string, password: string) {
@@ -57,6 +64,35 @@ export class AuthService {
     }
   }
 
+  async kakaoLogin(email: string) {
+    try {
+      let user = await this.userServices.findOne({ email });
+
+      if (!user) {
+        const username = email.split("@")[0];
+        user = await this.userServices.create({
+          username,
+          email,
+          provider: "kakao",
+          password: null,
+          role: Role.USER,
+        });
+      }
+
+      const payload = {
+        id: user.id,
+      };
+
+      return {
+        ...user,
+        jwt: this.jwtService.sign(payload),
+      };
+    } catch (error) {
+      console.log(error);
+
+      throw new BadRequestException(this.authError.errorHandler(error.message));
+    }
+  }
   async login(user: LoginUserInput): Promise<LoginUserOutput> {
     try {
       const payload = {

@@ -13,18 +13,18 @@ exports.Users = void 0;
 const class_validator_1 = require("class-validator");
 const core_entitiy_1 = require("../../common/entities/core.entitiy");
 const typeorm_1 = require("typeorm");
+const roles_enum_1 = require("./roles.enum");
 let Users = class Users extends core_entitiy_1.CoreEntity {
 };
 __decorate([
     (0, typeorm_1.Column)({ unique: true }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Min)(3),
+    (0, class_validator_1.MinLength)(3),
     __metadata("design:type", String)
 ], Users.prototype, "username", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     (0, class_validator_1.IsEmail)(),
-    (0, class_validator_1.Min)(6),
     __metadata("design:type", String)
 ], Users.prototype, "email", void 0);
 __decorate([
@@ -33,7 +33,7 @@ __decorate([
     __metadata("design:type", String)
 ], Users.prototype, "provider", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], Users.prototype, "password", void 0);
@@ -57,6 +57,11 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], Users.prototype, "fail", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ default: roles_enum_1.Role.USER }),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], Users.prototype, "role", void 0);
 Users = __decorate([
     (0, typeorm_1.Entity)()
 ], Users);

@@ -18,22 +18,34 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const users_entity_1 = require("./entities/users.entity");
 const bcrypt = require("bcrypt");
+const user_error_1 = require("./error/user.error");
 let UsersService = class UsersService {
-    constructor(userRepository) {
+    constructor(userRepository, userError) {
         this.userRepository = userRepository;
+        this.userError = userError;
     }
     async create(userData) {
-        const { email, username, password } = userData;
-        console.log(userData);
-        const user = new users_entity_1.Users();
-        user.email = email;
-        user.password = await this.hash(password);
-        user.username = username;
-        user.provider = "local";
-        await this.userRepository.save(user);
-        user.password = undefined;
-        console.log(user);
-        return user;
+        try {
+            const { email, username, password, role, provider } = userData;
+            if (provider === "local" && !password) {
+                throw Error(user_error_1.USER_ERROR.NOT_ENTER_PASSWORD);
+            }
+            const user = new users_entity_1.Users();
+            user.email = email;
+            user.password = password ? await this.hash(password) : null;
+            user.username = username;
+            user.provider = provider;
+            user.role = role;
+            const createUser = await this.userRepository.save(user);
+            if (!createUser) {
+                throw Error(user_error_1.USER_ERROR.USER_CREATE_FAILED);
+            }
+            return createUser;
+        }
+        catch (error) {
+            console.log(error);
+            throw new common_1.BadRequestException(this.userError.errorHandler(error.message));
+        }
     }
     async hash(txt) {
         const saltOrRounds = 10;
@@ -42,11 +54,24 @@ let UsersService = class UsersService {
     async isHashValid(password, hashPassword) {
         return await bcrypt.compare(password, hashPassword);
     }
+    async findOneAdmin(query) {
+        return await this.userRepository.findOne({
+            where: query,
+        });
+    }
+    async findOne(query) {
+        const user = await this.userRepository.findOne({
+            select: { username: true, email: true, id: true, provider: true },
+            where: query,
+        });
+        return user;
+    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(users_entity_1.Users)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        user_error_1.UserError])
 ], UsersService);
 exports.UsersService = UsersService;
 //# sourceMappingURL=users.service.js.map

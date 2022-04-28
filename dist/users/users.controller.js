@@ -29,7 +29,7 @@ __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserInput]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "create", null);
 UsersController = __decorate([

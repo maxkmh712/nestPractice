@@ -6,7 +6,6 @@ import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 @Entity()
 export class Movie extends CoreEntity {
   @Column()
-  @IsString()
   @IsNotEmpty()
   title: string;
 

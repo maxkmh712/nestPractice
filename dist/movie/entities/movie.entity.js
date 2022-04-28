@@ -18,7 +18,6 @@ let Movie = class Movie extends core_entitiy_1.CoreEntity {
 };
 __decorate([
     (0, typeorm_1.Column)(),
-    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], Movie.prototype, "title", void 0);

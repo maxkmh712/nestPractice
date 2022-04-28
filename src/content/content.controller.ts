@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   ForbiddenException,
   Get,
@@ -22,6 +23,7 @@ import { LoginUserOutput } from "src/auth/dto/login-user.dto";
 import { Roles } from "src/role/role.decorator";
 import { CustomUploadFiles } from "src/upload-file/decorator/upload-file.decorator";
 import { ContentService } from "./content.service";
+import { CreateContentDto } from "./dto/create-content.dto";
 import { Content } from "./entities/content.entity";
 import { ContentError, CONTENT_ERROR } from "./error/content.error";
 const uploadController = require("../upload-file/upload-file.controller");
@@ -58,6 +60,11 @@ export class ContentController {
   createContents(@UploadedFiles() files: Express.MulterS3.File[]) {
     return uploadController.uploadFile(files);
   }
+
+  // @Post("create")
+  // createContent(@Body() createContentDto: CreateContentDto) {
+  //   return this.contentService.createContent(createContentDto);
+  // }
 
   // @Get()
   // async getBasicScoreContents(
