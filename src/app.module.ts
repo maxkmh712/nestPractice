@@ -26,6 +26,8 @@ import { MovieDirectorModule } from "./movie-director/movie-director.module";
 import { MovieDirector } from "./movie-director/entities/movie-director.entity";
 import { MovieDirectorController } from "./movie-director/movie-director.controller";
 import { RolesGuard } from "./role/role.guard";
+import { PictureModule } from './picture/picture.module';
+import { ImageModule } from './image/image.module';
 
 @Module({
   imports: [
@@ -83,6 +85,7 @@ import { RolesGuard } from "./role/role.guard";
     OrderStateModule,
     MovieModule,
     MovieDirectorModule,
+    PictureModule,
   ],
   controllers: [],
   providers: [

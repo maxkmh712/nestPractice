@@ -1,22 +1,34 @@
-import { Controller, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import * as multerS3 from 'multer-s3';
-import * as AWS from 'aws-sdk';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ImageService } from './image.service';
+import { CreateImageDto } from './dto/create-image.dto';
+import { UpdateImageDto } from './dto/update-image.dto';
 
-const s3 = new AWS.S3()
-
-@Controller('upload')
+@Controller('image')
 export class ImageController {
-    @Post('file')
-    @UseInterceptors(FileInterceptor('file'))
-    uploadFile(@UploadedFile() file : Express.Multer.File) {
-        console.log(file);
-    }
+  constructor(private readonly imageService: ImageService) {}
 
-    @Post('files')
-    @UseInterceptors(FileInterceptor('files'))
-    uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
-        console.log(files)
-    }
+  @Post()
+  create(@Body() createImageDto: CreateImageDto) {
+    return this.imageService.create(createImageDto);
+  }
 
+  @Get()
+  findAll() {
+    return this.imageService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.imageService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateImageDto: UpdateImageDto) {
+    return this.imageService.update(+id, updateImageDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.imageService.remove(+id);
+  }
 }
